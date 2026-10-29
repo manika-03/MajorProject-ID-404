@@ -26,4 +26,5 @@
 @media(max-height:700px) and (min-width:651px){.voice-stage.assistant-card{grid-template-rows:120px 240px 150px;gap:20px}.microphone-position{--mic-diameter:165px;--ripple-scale:1.42;width:240px;height:240px}}
 @media(prefers-reduced-motion:reduce){.voice-stage:is(.listening,.speaking) .voice-ripple{animation:none!important;opacity:0}.voice-stage:is(.listening,.speaking) .voice-ripple:first-child{opacity:.45;transform:scale(1.14)}.central-microphone{transition:none}}
 .voice-footer nav{flex-wrap:wrap;justify-content:flex-end;column-gap:20px;row-gap:0}
+.voice-header-account{display:flex;align-items:center;gap:15px}.voice-account-icon{width:44px;height:44px;display:grid;place-items:center;border:1px solid #cfddf1;background:#fff;border-radius:50%;color:#255bb1;flex-shrink:0}.voice-account-icon:hover{background:#e8f1ff}.voice-account-icon svg{width:20px;height:20px}
 @media(max-width:650px){.voice-footer{align-items:center;flex-direction:column;text-align:center}.voice-footer>p{max-width:none}.voice-footer nav{justify-content:center;gap:0 20px}}

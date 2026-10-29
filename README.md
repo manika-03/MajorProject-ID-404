@@ -74,10 +74,13 @@ the `python` command rather than `py`, use `python -m venv .venv`.
   locations. They can add/remove reminders, dismiss due alerts and acknowledge
   requests. It refreshes every 15 seconds without replacing focused controls.
   This is the same patient workspace; separate caregiver roles are not implemented.
-- Create account, log in and log out. Passwords use Werkzeug's scrypt hashing.
-  Reminders and requests are scoped to the current account. A persistent signing
-  key is generated under the ignored `instance/` directory. Login attempts are limited.
-- A six-screen mobile app design at http://127.0.0.1:5000/mobile-design.
+- A top-right account icon opens the spoken login concept. It asks for a sample
+  email/login ID, reads it back for confirmation, explains the future fingerprint
+  step, then lets the visitor continue as a guest by voice or button. No fingerprint
+  is scanned, and a spoken ID never authenticates or selects a patient record.
+- The earlier password account APIs are retained, with scrypt hashing, scoped
+  records and limited login attempts; the current login interface uses guest
+  access only. A persistent signing key lives in the ignored `instance/` directory.
 - Keyboard controls, semantic labels, live statuses, high contrast, large text,
   reduced-motion support and responsive layout. No accessibility certification is claimed.
 
@@ -120,7 +123,7 @@ the `python` command rather than `py`, use `python -m venv .venv`.
 ```powershell
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 .\.venv\Scripts\python.exe tests\evaluate.py
-node --test tests\conversation.test.cjs
+node --test tests\conversation.test.cjs tests\login-concept.test.cjs
 ```
 
 The evaluator writes actual results to `test-results/evaluation.json`. It measures
@@ -134,13 +137,22 @@ a due reminder, and the staff acknowledgement. Record observed results for denie
 microphone access, lost speech-service connectivity and keyboard-only operation.
 Keep claimed milestones consistent with actual tested behaviour.
 
-## Accounts
+## Voice login concept and guest access
 
-Open http://127.0.0.1:5000/login and select Create account. Use fictional details
-for this project demonstration. There is no shared preset password. Registered
-accounts have their own empty care record, reminders and assistance requests.
-The guest demo remains available without a login and uses the fictional Alex record.
-The local prototype is not a production medical-records authentication system.
+Open the account icon at the top right, or http://127.0.0.1:5000/login. Tap the
+central microphone, say a sample ID such as “demo one”, then confirm it with “yes”.
+CareVoice explains that fingerprint verification is planned and not connected.
+Say “continue as guest”, or use the matching button, to open the fictional Alex
+workspace. Say “no” to correct an ID, “try again” to restart, or “stop” to pause.
+
+The sample identifier stays in page memory and is cleared on leaving. It is not
+saved in local storage, sent to the application API, or used to open an account.
+Login prompts and ID readback use the device voice; the identifier is not sent to
+ElevenLabs. Browser speech recognition may still use its provider's online service.
+The guest button clears any existing signed-in session before returning home.
+Real fingerprint authentication, biometric enrolment and account lookup by spoken
+identifier are not implemented. The earlier password APIs and their tests remain
+in the source; the password form is no longer the active login interface.
 
 ## Optional ElevenLabs voice
 
@@ -165,10 +177,9 @@ Use fictional healthcare content for demonstrations.
 Official API reference: https://elevenlabs.io/docs/api-reference/text-to-speech/convert
 Model reference: https://elevenlabs.io/docs/overview/models
 
-## Mobile design
+## Project scope
 
-The `/mobile-design` page shows welcome, sign-in, home, listening, conversation and
-reminder concepts, plus contrast and text-size previews. It is a browser design
-board, not an installed native app. Planned native screen-reader gestures,
-notifications and voice-guided reminder creation still need implementation and
-testing with target users. The locally bundled font's license is in `static/fonts/OFL.txt`.
+This project is a website. A native mobile app is outside the current scope.
+The older `/mobile-design` board is retained as an archived design exercise;
+it is not an implemented app or a current delivery milestone. The locally
+bundled font's license is in `static/fonts/OFL.txt`.

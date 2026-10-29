@@ -37,7 +37,7 @@ class AccountAndVoiceTest(unittest.TestCase):
         self.assertFalse(self.client.get('/api/auth/me').get_json()['authenticated'])
         self.assertEqual(self.client.post('/api/auth/login',json={'email':'ALEX@EXAMPLE.TEST','password':'wrong'}).status_code,401)
         self.assertEqual(self.client.post('/api/auth/login',json={'email':'ALEX@EXAMPLE.TEST','password':'test-password-123'}).status_code,200)
-        self.assertEqual(self.client.get('/login').status_code,302)
+        self.assertEqual(self.client.get('/login').status_code,200)
 
     def test_accounts_and_guest_cannot_access_each_others_records(self):
         other=self.app.test_client();guest=self.app.test_client()
@@ -115,9 +115,24 @@ class AccountAndVoiceTest(unittest.TestCase):
             create_audio('Hello','key','../invalid')
 
     def test_new_pages_and_assets(self):
-        for path in ['/login','/mobile-design','/patient-overview','/static/patient-overview.js','/static/patient-overview.css','/static/listening-cue.js','/static/listen-cue.wav','/static/fonts/Manrope-Variable.ttf','/static/voice-playback.js','/static/conversation.js']:
+        for path in ['/login','/mobile-design','/patient-overview','/static/login-concept.js','/static/login-flow.js','/static/login-concept.css','/static/patient-overview.js','/static/patient-overview.css','/static/listening-cue.js','/static/listen-cue.wav','/static/fonts/Manrope-Variable.ttf','/static/voice-playback.js','/static/conversation.js']:
             with self.client.get(path) as response:
                 self.assertEqual(response.status_code,200,path)
+
+    def test_login_concept_does_not_authenticate_and_guest_entry_clears_previous_account(self):
+        page=self.client.get('/login').get_data(as_text=True)
+        self.assertIn('Planned feature · not connected.',page)
+        self.assertNotIn('type="password"',page)
+        self.assertNotIn('account-email',page)
+        self.assertFalse(self.client.get('/api/auth/me').get_json()['authenticated'])
+        self.register(self.client)
+        self.client.get('/login')
+        self.assertTrue(self.client.get('/api/auth/me').get_json()['authenticated'])
+        self.client.post('/api/auth/logout',json={})
+        self.assertFalse(self.client.get('/api/auth/me').get_json()['authenticated'])
+        self.assertEqual(self.client.get('/api/bootstrap').get_json()['patient']['id'],1)
+        with connection(self.path) as db:
+            self.assertEqual(db.execute('SELECT COUNT(*) FROM user_account').fetchone()[0],1)
 
     def test_overview_shows_all_saved_visits_and_scopes_every_record_to_the_account(self):
         guest=self.app.test_client()

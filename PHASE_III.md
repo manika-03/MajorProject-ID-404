@@ -42,16 +42,19 @@ not a separate caregiver role or hospital integration.
 | Turn-taking voice conversation | Implemented | State-controller and playback tests pass; real microphone/audio check pending |
 | Local accounts and scoped records | Implemented | Registration, password hashing, login/logout and cross-account isolation tested |
 | ElevenLabs voice adapter | Implemented and locally configured | Mocked success/failure and key protection tested; live MP3 generation verified through the Flask endpoint |
-| Mobile app design | Six screen concepts implemented | Browser board visually inspected; native app and target-user tests are future work |
+| Spoken login concept | Implemented with guest access | Sample-ID confirmation, correction, guest entry and no-authentication boundary tested; real fingerprint authentication is planned only |
 
 ## Measured development checks
 
-- Backend/integration/parser suite: 23 tests across the three Python test files,
+- Backend/integration/parser suite: 24 tests across the three Python test files,
   including patient-overview account isolation and all saved appointments.
 - JavaScript controller/playback/cue suite: 14 tests covering onboarding once per
   page load, browser timer binding, turn-taking, cancellation, silence, device
   output, cloud fallback and the two-note cue. Browser stop/restart was checked;
   real laptop microphone recognition and audible tone checks remain pending.
+- Spoken login concept: 6 additional JavaScript tests covering ID readback,
+  confirmation and correction, guest commands, cancelling listening, and the
+  boundary between a concept demonstration and actual authentication.
 - Independent-phrasing development smoke set: 16 supported questions and 4
   unrelated questions. The supported questions use wording different from the
   retrieval examples, but are still developer-authored.
@@ -107,7 +110,9 @@ on the demonstration device remain unverified.
 
 ## Limitations and future work
 
-This is a localhost prototype with hashed-password patient accounts. New accounts
+This project is website-only. The current login page demonstrates spoken ID entry
+and explains a future fingerprint step; guest access is used today. No fingerprint
+is scanned or verified. Earlier hashed-password account APIs remain in the source. New accounts
 begin empty and have isolated reminders and requests. The guest workspace retains
 the fictional patient records. A separate authenticated hospital staff role is not
 implemented; the assistance dashboard shows only the current workspace. The app

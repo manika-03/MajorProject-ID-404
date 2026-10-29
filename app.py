@@ -97,8 +97,6 @@ def create_app(test_config=None):
 
     @app.get('/login')
     def login_page():
-        if account():
-            return redirect('/')
         return render_template('login.html')
 
     @app.get('/mobile-design')

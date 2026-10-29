@@ -1,0 +1,8 @@
+.venv/
+.tmp/
+__pycache__/
+*.pyc
+instance/
+tmp/
+test-results/
+.env
